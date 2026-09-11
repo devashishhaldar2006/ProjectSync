@@ -7,9 +7,10 @@
 ---
 
 ## 🚀 Live Demo & Submission Details
-- **Assessment Submission Form**: [Submitted via Official Portal](https://bit.ly/4bGXmZV)
-- **Tech Stack**: React 18, TypeScript, Node.js, Express, PostgreSQL, Prisma ORM, Socket.io, node-cron
-- **Default Portals**:
+- **Live Vercel Application**: [https://project-sync-smoky.vercel.app/](https://project-sync-smoky.vercel.app/)
+- **Assessment Submission Portal**: [https://bit.ly/4bGXmZV](https://bit.ly/4bGXmZV)
+- **Tech Stack**: React 18, TypeScript, Node.js, Express, PostgreSQL (Neon Serverless), Prisma ORM, Socket.io, node-cron
+- **Local Dev Endpoints**:
   - Frontend: `http://localhost:5173`
   - Backend API: `http://localhost:5000`
   - PostgreSQL Database: `localhost:5432`
