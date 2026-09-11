@@ -27,12 +27,14 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
+  const baseUrl = import.meta.env.VITE_API_URL || '';
+
   // Load missed event catch-up from DB (last 20 events)
   const refreshActivities = async () => {
     if (!user) return;
     try {
       const token = getAccessToken();
-      const res = await fetch('/api/activities?limit=20', {
+      const res = await fetch(`${baseUrl}/api/activities?limit=20`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -49,7 +51,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!user) return;
     try {
       const token = getAccessToken();
-      const res = await fetch('/api/notifications', {
+      const res = await fetch(`${baseUrl}/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -78,7 +80,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     loadNotifications();
 
     const token = getAccessToken();
-    const newSocket = io(window.location.origin, {
+    const socketTarget = baseUrl || window.location.origin;
+    const newSocket = io(socketTarget, {
       auth: { token },
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
@@ -134,7 +137,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const markNotificationRead = async (id: string) => {
     try {
       const token = getAccessToken();
-      await fetch(`/api/notifications/${id}/read`, {
+      await fetch(`${baseUrl}/api/notifications/${id}/read`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -148,7 +151,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const markAllNotificationsRead = async () => {
     try {
       const token = getAccessToken();
-      await fetch('/api/notifications/read-all', {
+      await fetch(`${baseUrl}/api/notifications/read-all`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });

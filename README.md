@@ -18,7 +18,13 @@
 
 ## 🏛 Architectural Decisions & Justifications
 
-### 1. WebSocket Library Choice: Socket.io
+### 1. Backend Framework Choice: Node.js with Express & TypeScript
+- **Rationale**: Express was chosen over Fastify because:
+  - **Maturity & Middleware Chaining**: Express's middleware execution model provides rock-solid, sequential chaining of authentication, RBAC authorization, and Zod input validation (`authenticate -> requireRole -> validateBody`).
+  - **First-Class Socket.io Integration**: Attaching Socket.io to the underlying Node HTTP server in Express allows unified session validation and shared connection state without ecosystem friction.
+  - **TypeScript Type Merging**: Express easily extends the native `Request` object with `req.user: AuthenticatedUser`, ensuring strict compile-time type safety throughout all controllers.
+
+### 2. WebSocket Library Choice: Socket.io
 - **Rationale**: While native `ws` provides a minimalist WebSocket implementation, **Socket.io** provides production-critical features essential for multi-tenant, real-time collaboration:
   - **Room-based multiplexing (`socket.join('project:xyz')`, `socket.join('role:admin')`, `socket.join('user:123')`)**: Ensures that events are dispatched *strictly to authorized consumers*. A developer never receives socket messages about projects or tasks they do not own over the wire.
   - **JWT Handshake Authentication**: Handshake middleware validates the bearer token before connection upgrade, ensuring unauthorized sockets are rejected at the TCP boundary.

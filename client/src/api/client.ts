@@ -17,7 +17,8 @@ interface RequestOptions extends RequestInit {
 export async function apiRequest<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { params, headers = {}, ...customConfig } = options;
 
-  let url = `/api${endpoint}`;
+  const baseUrl = import.meta.env.VITE_API_URL || '';
+  let url = `${baseUrl}/api${endpoint}`;
   if (params) {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
@@ -49,7 +50,7 @@ export async function apiRequest<T = any>(endpoint: string, options: RequestOpti
   // If unauthorized and not already hitting refresh endpoint, attempt automatic token refresh
   if (response.status === 401 && !endpoint.startsWith('/auth/refresh') && !endpoint.startsWith('/auth/login')) {
     try {
-      const refreshResponse = await fetch('/api/auth/refresh', {
+      const refreshResponse = await fetch(`${baseUrl}/api/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
